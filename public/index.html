@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tekkit Lite Server simple manager</title>
+
+        <link rel="stylesheet" href="style.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        <script src=" https://cdn.jsdelivr.net/npm/xterm@5.1.0/lib/xterm.min.js "></script>
+        <link href=" https://cdn.jsdelivr.net/npm/xterm@5.1.0/css/xterm.min.css " rel="stylesheet">
+    </head>
+    <body>
+        <div id="notice" class="hidden"></div>
+        <div class="container">
+            <div class="controls">
+                <button id="serverStart" onclick="StartServer()">Start</button>
+                <button id="sererStop" onclick="StopServer()">Stop</button>
+                <button id="serverRestart" onclick="KillServer()">Restart</button><br>
+                <button id="serverKill" onclick="KillServer()" style="color:red;">Kill</button><br>
+                <span class="status">Status: <span id="serverStatus">Unknown</span></span>
+            </div>
+            <div class="console">
+                <div style="display:flex;width:100%;">
+                    <input type="checkbox" id="showConsole"> Show console?
+                    <button style="position: absolute;right:0;" onclick="term.clear()">Clear</button>
+                </div>
+                <div id="terminal" style="display:none;"></div>
+                <div id="commandDispatcher" style="display:none;">
+                    <input type="text" id="command" placeholder="Type a command...">
+                    <button id="submitCommand">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="main.js" defer></script>
+    </body>
+</html>

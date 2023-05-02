@@ -17,7 +17,7 @@
             "check": false
         },
         {
-            "hosts": ["https://github.com/rezizdigus/tekkit-lite-something/blob/main/package.json"],
+            "hosts": ["https://raw.githubusercontent.com/rezizdigus/tekkit-lite-something/main/package.json"],
             "name": "",
             "notice": "",
             "status": "",

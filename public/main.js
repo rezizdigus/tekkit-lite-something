@@ -32,6 +32,7 @@ const onLoad = async () => {
     }
 
     ConnectToWebsocket()
+    CheckForUpdates()
 }
 
 const SetNotice = (Message) => {
@@ -115,24 +116,26 @@ const KillServer = async () => {
 
 const GetUpdateHosts = async () => {
     let hosts = await fetch('https://static-oracle.zdigus.net/update_hosts_tls.json')
-    if (!hosts1.ok) {
+    if (!hosts.ok) {
         hosts = await fetch('https://raw.githubusercontent.com/rezizdigus/tekkit-lite-something/main/update_hosts.json')
     }
 
     const data = await hosts.json()
     const expireDate = Date.now() + data.expireCache
-    localStorage.setItem('update_hosts', JSON.stringify(data))
+    localStorage.setItem('update_hosts', JSON.stringify(data.update_hosts))
     localStorage.setItem('hosts_expire', expireDate)
-    return data
+    return data.update_hosts
 }
 
 const CheckForUpdates = async () => {
-    let hosts = localStorage.getItem('update_hosts')
+    let hosts = JSON.parse(localStorage.getItem('update_hosts'))
     let expireDate = localStorage.getItem('hosts_expire')
 
     if (hosts == undefined || expireDate <= Date.now()) {
         hosts = await GetUpdateHosts()
     }
+
+    console.log(hosts)
     
     hosts.forEach(async host => {
         if (!host.check) return
@@ -169,4 +172,8 @@ const CheckForUpdates = async () => {
             SetNotice('New version available ('+latestVersion+')! Please notify the server owner to update the panel.')
         }
     })
+
+    setTimeout(() => {
+        CheckForUpdates()
+    }, 30 * 60000)
 }

@@ -25,5 +25,5 @@
             "check": true
         }
     ],
-    "expireCache": "259200000"
+    "expireCache": "259200"
 }

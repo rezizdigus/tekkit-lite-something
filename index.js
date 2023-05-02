@@ -34,15 +34,15 @@ App.get('/start_server', async (Req, Res) => {
         })
 
         serverProcess.stdout.on('data', async function (data) {
-            console.log(data)
         })
 
         serverProcess.stdout.on('data', async function (data) {
-            console.log('aaaa')
+            if (data.toString().includes('For help, type "help" or "?"')) ChangeServerStatus('RUNNING')
             wss.clients.forEach(client => client.send(data))
         })
         
         serverProcess.stderr.on('data', async function (data) {
+            if (data.toString().includes('For help, type "help" or "?"')) ChangeServerStatus('RUNNING')
             wss.clients.forEach(client => client.send(data))
         })
         

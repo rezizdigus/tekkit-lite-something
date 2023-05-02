@@ -1,4 +1,4 @@
-const version = '1.0.1'
+const version = '1.0.3'
 
 let term = new Terminal()
 term.open(document.getElementById('terminal'), {scrollback: 999999, disableStdin: true})

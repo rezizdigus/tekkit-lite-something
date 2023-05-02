@@ -148,7 +148,7 @@ const CheckForUpdates = async () => {
                 const data = await response.json()
                 if (!data.version) continue
 
-                versionData = data.version
+                latestVersion = data.version
                 break
             }
         }

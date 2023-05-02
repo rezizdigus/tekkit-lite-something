@@ -3,11 +3,15 @@
 import Express from "express"
 import config from "./config.js"
 
+import cors from 'cors'
+
 import WebSocket, { WebSocketServer } from 'ws'
 
 import { spawn } from "child_process"
 
 const App = Express()
+
+App.use(cors())
 
 let serverStatus = 'STOPPED'
 let serverProcess = undefined

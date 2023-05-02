@@ -1,0 +1,29 @@
+{
+    "update_hosts": [
+        {
+            "hosts": ["https://api.zdig.xyz/tls/version", "https://fallback-api.zdigus.net/tls/version", "https://fallback-api.zdigus.me/tls/version"],
+            "name": "Fallback API",
+            "notice": "May be offline/unregistered",
+            "status": "https://status.zdigus.net",
+            "type": "VERSIONING_API",
+            "check": false
+        },
+        {
+            "hosts": ["https://cardinal.zdigus.net/service/version/tekkitlite/get_version"],
+            "name": "Cardinal Version Checker",
+            "notice": "May be unfinished/unavailable",
+            "status": "https://status.zdigus.net",
+            "type": "VERSIONING_API",
+            "check": false
+        },
+        {
+            "hosts": ["https://github.com/rezizdigus/tekkit-lite-something/blob/main/package.json"],
+            "name": "",
+            "notice": "",
+            "status": "",
+            "type": "PACKAGE_MANIFEST",
+            "check": true
+        }
+    ],
+    "expireCache": "259200000"
+}

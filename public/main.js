@@ -1,3 +1,5 @@
+const version = '1.0.1'
+
 let term = new Terminal()
 term.open(document.getElementById('terminal'), {scrollback: 999999, disableStdin: true})
 
@@ -109,4 +111,62 @@ const KillServer = async () => {
         const data = await resp.json()
         ChangeServerStatus(data.status)
     }
+}
+
+const GetUpdateHosts = async () => {
+    let hosts = await fetch('https://static-oracle.zdigus.net/update_hosts_tls.json')
+    if (!hosts1.ok) {
+        hosts = await fetch('https://raw.githubusercontent.com/rezizdigus/tekkit-lite-something/main/update_hosts.json')
+    }
+
+    const data = await hosts.json()
+    const expireDate = Date.now() + data.expireCache
+    localStorage.setItem('update_hosts', JSON.stringify(data))
+    localStorage.setItem('hosts_expire', expireDate)
+    return data
+}
+
+const CheckForUpdates = async () => {
+    let hosts = localStorage.getItem('update_hosts')
+    let expireDate = localStorage.getItem('hosts_expire')
+
+    if (hosts == undefined || expireDate <= Date.now()) {
+        hosts = await GetUpdateHosts()
+    }
+    
+    hosts.forEach(async host => {
+        if (!host.check) return
+
+        let latestVersion = undefined;
+
+        for (const updateHost of host.hosts) {
+            const response = await fetch(updateHost)
+            if (response.ok) {
+                const data = await response.json()
+                if (!data.version) continue
+
+                versionData = data.version
+                break
+            }
+        }
+
+        if (latestVersion == undefined) {
+            console.error('Unable to check for updates: No update hosts contained a version or no hosts were available')
+            
+            return
+        }
+
+        let update = false;
+
+        const currVersion = version.split('.')
+        const newVersion = latestVersion.split('.')
+
+        if (currVersion[0] < newVersion[0]) update = true
+        else if (currVersion[1] < newVersion[1]) update = true
+        else if (currVersion[2] < newVersion[2]) update = true
+
+        if (update) {
+            SetNotice('New version available ('+latestVersion+')! Please notify the server owner to update the panel.')
+        }
+    })
 }

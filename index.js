@@ -12,6 +12,7 @@ import { spawn } from "child_process"
 const App = Express()
 
 App.use(cors())
+App.use(Express.json())
 
 let serverStatus = 'STOPPED'
 let serverProcess = undefined
@@ -80,6 +81,14 @@ App.get('/stop_server', async (Req, Res) => {
     return Res.status(200).json({ message: 'Process stopped', status: serverStatus })
 })
 
+App.post('/send_command', async (Req, Res) => {
+    if (serverStatus === 'STOPPED') return Res.status(400).json({ message: 'Server is stopped!' })
+    if (!Req.body.command) return Res.status(400).json({ message: 'No command' })
+
+    SendCommnad(Req.body.command)
+    Res.status(200).json({ message: 'Sent successfully'})
+})
+
 App.get('/get_status', (Req, Res) => {
     Res.status(200).json({ status: serverStatus })
 })
@@ -93,7 +102,7 @@ App.listen(config.Port, () => {
 const SendCommnad = (Command) => {
     if (serverStatus === 'STOPPED') throw new Error('Server is stopped')
     serverProcess.stdin.write(Command)
-    serverProcess.stdin.end()
+    serverProcess.stdin.end() // apparently this causes the whole standard input to stop working, how kind.
 }
 
 // websocket

@@ -177,3 +177,20 @@ const CheckForUpdates = async () => {
         CheckForUpdates()
     }, 30 * 60000)
 }
+
+$('#submitCommand').on('click', async () => {
+    term.write('> ' + $('#command').val() + '\n')
+    const resp = await fetch('/send_command', { method: 'POST', body: JSON.stringify({ command: $('#command').val() }), headers: { "Content-Type": "application/json" } })
+    if (!resp.ok) {
+        console.error(resp)
+        SetNotice('Command failed')
+    }
+})
+
+$("#command").on('keyup', function(event) {
+    console.log(event.key)
+    if (event.key === 'Enter') {
+        if ($("#command").val() === '') return
+        $("#submitCommand").click()
+    }
+});

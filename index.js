@@ -101,8 +101,8 @@ App.listen(config.Port, () => {
 
 const SendCommnad = (Command) => {
     if (serverStatus === 'STOPPED') throw new Error('Server is stopped')
-    serverProcess.stdin.write(Command)
-    serverProcess.stdin.end() // apparently this causes the whole standard input to stop working, how kind.
+    serverProcess.stdin.write(Command + '\r\n')
+     // apparently this causes the whole standard input to stop working, how kind.
 }
 
 // websocket

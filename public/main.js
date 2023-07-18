@@ -179,7 +179,7 @@ const CheckForUpdates = async () => {
 }
 
 $('#submitCommand').on('click', async () => {
-    term.write('> ' + $('#command').val() + '\n')
+    term.write('> ' + $('#command').val() + '\r\n')
     const resp = await fetch('/send_command', { method: 'POST', body: JSON.stringify({ command: $('#command').val() }), headers: { "Content-Type": "application/json" } })
     if (!resp.ok) {
         console.error(resp)
@@ -191,6 +191,6 @@ $("#command").on('keyup', function(event) {
     console.log(event.key)
     if (event.key === 'Enter') {
         if ($("#command").val() === '') return
-        $("#submitCommand").click()
+        $("#submitCommand").trigger("click")
     }
 });

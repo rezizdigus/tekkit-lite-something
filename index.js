@@ -24,6 +24,10 @@ const ChangeServerStatus = (status) => {
 
 App.use(Express.static('public'))
 
+async function readyOutput(output) {
+    return JSON.stringify({ action: 'TERMINAL_OUTPUT', data: output })
+}
+
 App.get('/start_server', async (Req, Res) => {
     if ((serverStatus !== 'STOPPED' && serverProcess !== undefined) && !(Req.query.force || false)) return Res.status(400).json({ message: 'Server is already running!' })
 
@@ -39,20 +43,20 @@ App.get('/start_server', async (Req, Res) => {
 
         serverProcess.stdout.on('data', async function (data) {
             if (data.toString().includes('For help, type "help" or "?"')) ChangeServerStatus('RUNNING')
-            wss.clients.forEach(client => client.send(data))
+            wss.clients.forEach(async client => client.send(await readyOutput(data.toString())))
         })
         
         serverProcess.stderr.on('data', async function (data) {
             if (data.toString().includes('For help, type "help" or "?"')) ChangeServerStatus('RUNNING')
-            wss.clients.forEach(client => client.send(data))
+            wss.clients.forEach(async client => client.send(await readyOutput(data.toString())))
         })
         
         serverProcess.on('kill', async function (code) {
-            wss.clients.forEach(client => client.send(`[${Date.now()}] Child process exited with code ${code.toString()}`))
+            wss.clients.forEach(async client => client.send(await readyOutput(`[${Date.now()}] Child process exited with code ${code.toString()}`)))
         })
 
         serverProcess.on('exit', () => {
-            wss.clients.forEach(client => client.send(`[PROCESS MANAGER] [${Date.now()}] Server stopped`))
+            wss.clients.forEach(client => client.send(readyOutput(`[PROCESS MANAGER] [${Date.now()}] Server stopped`)))
         })
 
         return Res.status(200).json({ message: 'Server is starting...', status: 'STARTING' })

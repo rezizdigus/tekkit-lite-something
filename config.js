@@ -9,7 +9,7 @@ const Config = {
     ],
     Command: 'java', // the path to java.exe (or something else on linux) / the run command
     StartArguments: ['-jar', 'TekkitLite.jar', '-Xmx', '4G', '-nogui'],
-    ServerDirectory: 'C:\\Users\\M\\Documents\\Projects\\server-manager\\server'
+    ServerDirectory: 'D:\\Projects\\Node\\tekkit-lite-something\\server'
 }
 
 export default Config

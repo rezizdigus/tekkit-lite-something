@@ -52,10 +52,8 @@ const ConnectToWebsocket = () => {
     const ws = new WebSocket('ws://127.0.0.1:3001')
 
     ws.onerror = async () => {
-        WSConnected = false
-        SetNotice('Lost connection with WebSocket, reconnecting...')
-        console.log('connection to websocket lost, reconnecting')
-        WebsocektInterval()
+        console.log('The Websocket connection has errored, closing...')
+        ws.close()
     }
 
     ws.onopen = async () => {
@@ -65,27 +63,26 @@ const ConnectToWebsocket = () => {
     }
     
     ws.onmessage = async (ev) => {
-        const message = await ev.data.text()
-        term.write(message)
-        if (message.includes('For help, type "help" or "?"')) ChangeServerStatus('RUNNING')
-        if (message.includes('Stopping server')) ChangeServerStatus('STOPPED')
+        const data = await JSON.parse(ev.data)
+        if (data.action == 'TERMINAL_OUTPUT') {
+            const message = data.data
+            term.write(message)
+            if (message.includes('For help, type "help" or "?"')) ChangeServerStatus('RUNNING')
+            if (message.includes('Stopping server')) ChangeServerStatus('STOPPED')
+        } else {
+            console.log('Recieved server data of type \'' + data.action + '\': ' + data.data)
+        }
     }
     
     ws.onclose = async () => {
         WSConnected = false
         SetNotice('Lost connection with WebSocket, reconnecting...')
         console.log('connection to websocket lost, reconnecting')
-        ConnectToWebsocket()
+        setTimeout(async () => {
+            ConnectToWebsocket()
+        }, 2000)
+        
     }
-}
-
-const WebsocektInterval = () => {
-    setInterval(() => {
-        if (WSConnected) {
-            return clearInterval(this)
-        }
-        ConnectToWebsocket()
-    }, 2000)
 }
 
 onLoad()

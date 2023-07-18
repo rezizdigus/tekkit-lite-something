@@ -7,7 +7,7 @@ const Config = {
             Password: 'test1' // you might want to hash this later, rez
         }
     ],
-    Command: 'java', // the path to jawa.exe (or something else on linux) / the run command
+    Command: 'java', // the path to java.exe (or something else on linux) / the run command
     StartArguments: ['-jar', 'TekkitLite.jar', '-Xmx', '4G', '-nogui'],
     ServerDirectory: 'C:\\Users\\M\\Documents\\Projects\\server-manager\\server'
 }
